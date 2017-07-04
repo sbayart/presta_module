@@ -3,3 +3,6 @@
 !/modules
 /modules/*
 !/modules/mymodule
+!/config
+/config/*
+!/config/defines.inc.php
