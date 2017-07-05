@@ -13,8 +13,8 @@ class MyModule extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Mon tit module');
-        $this->description = $this->l('Description de mon tit module.');
+        $this->displayName = $this->l('My little module');
+        $this->description = $this->l('Description of my little module.');
 
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
 
