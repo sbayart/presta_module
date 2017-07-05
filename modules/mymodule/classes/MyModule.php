@@ -120,9 +120,9 @@ class MyModule extends Module
             array(
                 'my_module_name' => Configuration::get('MYMODULE_NAME'),
                 'my_module_link' => $this->context->link->getModuleLink('mymodule', 'display')
-            )
+                )
         );
-        return $this->display(__FILE__, 'mymodule.tpl');
+        return $this->display(_PS_MODULE_DIR_.'mymodule/mymodule.php', 'mymodule.tpl');
     }
 
     public function hookDisplayRightColumn($params)
