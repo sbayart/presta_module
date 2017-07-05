@@ -135,6 +135,13 @@ class MyModule extends Module
         $this->context->controller->addCSS($this->_path.'css/mymodule.css', 'all');
     }
 
+    public static function getProductTotal()
+    {
+		$productObj = new Product();
+		$products = $productObj->getProducts(Context::getContext()->language->id, 0, 0, 'id_product', 'DESC', false, true);
+		return count($products);
+	}
+
     public function uninstall()
     {
         if (!parent::uninstall()
