@@ -1,0 +1,12 @@
+#producttotal_block_home span {
+    font-size: 30px;
+}
+#producttotal_block_home {
+    padding: 20px 10px;
+    text-align: center;
+    width: 100%;
+    background: none #18BF0A;
+    margin:0 0 20px;
+    font-size: 20px;
+    color: white;
+}
