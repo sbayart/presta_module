@@ -3,6 +3,8 @@
 !/modules
 /modules/*
 !/modules/mymodule
+!/modules/producttotal
+!/modules/blogmodule
 !/config
 /config/*
 !/config/defines.inc.php

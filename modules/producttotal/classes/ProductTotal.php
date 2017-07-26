@@ -28,116 +28,14 @@ class ProductTotal extends Module
         if (Shop::isFeatureActive()) {
             Shop::setContext(Shop::CONTEXT_ALL);
         }
-
-        if (!parent::install()
-            || !$this->registerHook('leftColumn')
-            || !$this->registerHook('header')
-            || !Configuration::updateValue('PRODUCTTOTAL_NAME', 'my friend')
-        ) {
-            return false;
-        }
-        return true;
+        return parent::install() &&
+            $this->registerHook('top') &&
+            $this->registerHook('header') &&
+            Configuration::updateValue('PRODUCTTOTAL_NAME', 'test');
     }
 
-    public function getContent()
+    public function hookDisplayTop()
     {
-        $output = null;
-
-        if (Tools::isSubmit('submit'.$this->name)) {
-            $product_total_name = strval(Tools::getValue('PRODUCTTOTAL_NAME'));
-            if (!$product_total_name
-                || empty($product_total_name)
-                || !Validate::isGenericName($product_total_name)
-            ) {
-                $output .= $this->displayError($this->l('Invalid Configuration value'));
-            } else {
-                Configuration::updateValue('PRODUCTTOTAL_NAME', $product_total_name);
-                $output .= $this->displayConfirmation($this->l('Settings updated'));
-            }
-        }
-        return $output.$this->displayForm();
-    }
-
-    public function displayForm()
-    {
-        // Get default language
-        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-
-        // Init Fields form array
-        $fields_form[0]['form'] = array(
-            'legend' => array(
-                'title' => $this->l('Settings'),
-            ),
-            'input' => array(
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Configuration value'),
-                    'name' => 'PRODUCTTOTAL_NAME',
-                    'size' => 20,
-                    'required' => true
-                )
-            ),
-            'submit' => array(
-                'title' => $this->l('Save'),
-                'class' => 'btn btn-default pull-right'
-            )
-        );
-
-        $helper = new HelperForm();
-
-        // Module, token and currentIndex
-        $helper->module = $this;
-        $helper->name_controller = $this->name;
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
-
-        // Language
-        $helper->default_form_language = $default_lang;
-        $helper->allow_employee_form_lang = $default_lang;
-
-        // Title and toolbar
-        $helper->title = $this->displayName;
-        $helper->show_toolbar = true;        // false -> remove toolbar
-        $helper->toolbar_scroll = true;      // yes - > Toolbar is always visible on the top of the screen.
-        $helper->submit_action = 'submit'.$this->name;
-        $helper->toolbar_btn = array(
-            'save' =>
-            array(
-                'desc' => $this->l('Save'),
-                'href' => AdminController::$currentIndex.'&configure='.$this->name.'&save'.$this->name.
-                '&token='.Tools::getAdminTokenLite('AdminModules'),
-            ),
-            'back' => array(
-                'href' => AdminController::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminModules'),
-                'desc' => $this->l('Back to list')
-            )
-        );
-
-        // Load current value
-        $helper->fields_value['PRODUCTTOTAL_NAME'] = Configuration::get('PRODUCTTOTAL_NAME');
-
-        return $helper->generateForm($fields_form);
-    }
-
-    public function hookDisplayLeftColumn($params)
-    {
-        $this->context->smarty->assign(
-            array(
-              'product_total_name' => Configuration::get('PRODUCTTOTAL_NAME'),
-              'product_total_link' => $this->context->link->getModuleLink('producttotal', 'display')
-            )
-        );
-        return $this->display(__FILE__, 'producttotal.tpl');
-    }
-
-    public function hookDisplayRightColumn($params)
-    {
-        return $this->hookDisplayLeftColumn($params);
-    }
-
-    public function hookDisplayHeader()
-    {
-        $this->context->controller->addCSS($this->_path.'css/producttotal.css', 'all');
         $this->context->smarty->assign(
             array(
               'product_total_name' => Configuration::get('PRODUCTTOTAL_NAME'),
@@ -145,6 +43,11 @@ class ProductTotal extends Module
             )
         );
         return $this->display(_PS_MODULE_DIR_.'producttotal/producttotal.php', 'producttotal.tpl');
+    }
+
+    public function hookDisplayHeader()
+    {
+        $this->context->controller->addCSS($this->_path.'css/producttotal.css', 'all');
     }
 
     public static function getProductTotal()
@@ -156,9 +59,7 @@ class ProductTotal extends Module
 
     public function uninstall()
     {
-        if (!parent::uninstall()
-            || !Configuration::deleteByName('PRODUCTTOTAL_NAME')
-        ) {
+        if (!parent::uninstall()) {
             return false;
         }
         return true;
