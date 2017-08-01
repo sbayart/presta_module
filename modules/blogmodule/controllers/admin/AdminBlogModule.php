@@ -5,6 +5,7 @@ class AdminBlogModuleController extends ModuleAdminController {
         $this->bootstrap = true;
         $this->table = 'blogmodule';
         $this->className = 'BlogPost';
+        $this->actions = array('delete');
 
         $this->fields_list = array(
 			'title' => array(
@@ -43,6 +44,7 @@ class AdminBlogModuleController extends ModuleAdminController {
                 'title' => $this->l('Save'),
 				'class' => 'button'
             )
+
         );
         parent::__construct();
     }
